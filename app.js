@@ -11,8 +11,26 @@ app.use((req, res, next) => {
 });
 app.use("/files/data/",v1);
 
+// manejo de rutas no encontradas
+app.use((req, res, next) => {
+  const error = new Error('Not Found');
+  error.status = 404;
+  next(error);
+});
+
+// Middleware de manejo de errores
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  res.json({
+    error: {
+      message: error.message,
+    },
+  });
+});
+
+
 const server= app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`servidor corriendo en: ${PORT}`);
 });
 
 module.exports = server;
